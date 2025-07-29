@@ -2,29 +2,31 @@ import tkinter as tk
 from time import strftime
 
 def update_time():
-    """Updates the time displayed on the digital clock."""
-    string_time = strftime('%H:%M:%S %p')  # Get current time in HH:MM:SS AM/PM format
-    digital_clock_label.config(text=string_time)
-    digital_clock_label.after(1000, update_time)  # Update every 1000 milliseconds (1 second)
+    current_time = strftime('%H:%M:%S')
+    label.config(text=current_time)
+    label.after(1000, update_time)
 
-# Create the main window
+# Dynamically resize font based on window size
+def resize_font(event):
+    new_size = min(event.width // 10, event.height // 2)
+    label.config(font=("Arial", new_size))
+
+# Main window setup
 root = tk.Tk()
-root.title("Digital Clock")
-root.geometry("400x150")  # Set window size
-root.resizable(False, False)  # Prevent resizing
-root.configure(bg="black")  # Set background color
+root.title("Responsive Digital Clock")
+root.configure(bg="black")
 
-# Create a label to display the time
-digital_clock_label = tk.Label(
-    root,
-    font=('calibri', 40, 'bold'),
-    background='black',
-    foreground='white'
-)
-digital_clock_label.pack(pady=40)  # Pack the label with some vertical padding
+# Make window resizable
+root.rowconfigure(0, weight=1)
+root.columnconfigure(0, weight=1)
 
-# Start updating the time
+# Create and place label
+label = tk.Label(root, font=("Arial", 50), bg="black", fg="cyan")
+label.grid(row=0, column=0, sticky="nsew")
+
+# Bind the window resizing event
+root.bind("<Configure>", resize_font)
+
+# Start the clock
 update_time()
-
-# Run the Tkinter event loop
 root.mainloop()
